@@ -1,6 +1,5 @@
 import express, {Request, Response} from 'express'
 import bodyParser from "body-parser";
-import {router} from "./router/router";
 import {allDeleteRouter} from "./router/allDeleteRouter";
 import {dataBase} from "./data";
 

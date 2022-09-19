@@ -3,7 +3,6 @@ import bodyParser from "body-parser";
 import {allDeleteRouter} from "./router/allDeleteRouter";
 import {dataBase} from "./data";
 
-//create express app
 const app = express();
 
 const port = process.env.PORT || 3003;
@@ -12,8 +11,6 @@ const parserMiddleware = bodyParser();
 app.use(parserMiddleware)
 
 
-
-app.use('/testing', allDeleteRouter);
 
 app.get('/videos', (req: Request, res: Response) => {
     res.send(dataBase);
@@ -79,7 +76,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
                 dataBase[i].availableResolutions = req.body.availableResolutions;
                 dataBase[i].canBeDownloaded = req.body.canBeDownloaded;
                 dataBase[i].minAgeRestriction = req.body.minAgeRestriction;
-                dataBase[i].publicationDate = req.body.publicationDate;
+                dataBase[i].publicationDate = newDate.toISOString();
 
                 res.send(201); //Created
                 return;
@@ -93,6 +90,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
 
 });
 
+app.use('/testing', allDeleteRouter);
 
 type BodyRequestPostVideo = {
     "title": "string",

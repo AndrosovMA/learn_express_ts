@@ -6,11 +6,11 @@ export const router = Router();
 //вместо app теперь испльзуем router
 
 
-router.get('/api/videos', (req: Request, res: Response) => {
+router.get('/', (req: Request, res: Response) => {
     res.send(dataBase);
 });
 
-router.get('/api/videos/:id', (req: Request, res: Response) => {
+router.get('/:id', (req: Request, res: Response) => {
     const id = req.params.id;
 
     const data = dataBase.find(el => el['id'] === +id);
@@ -23,7 +23,7 @@ router.get('/api/videos/:id', (req: Request, res: Response) => {
     }
 })
 
-router.delete('/api/videos/:id', (req: Request, res: Response) => {
+router.delete('/:id', (req: Request, res: Response) => {
     const id = +req.params.id;
 
     for (let i = 0; i < dataBase.length; i++) {
@@ -36,7 +36,7 @@ router.delete('/api/videos/:id', (req: Request, res: Response) => {
     res.send(404);
 });
 
-router.post('/api/videos', (req: Request, res: Response) => {
+router.post('/', (req: Request, res: Response) => {
     const date = new Date();
 
     const newVideo = {
@@ -57,7 +57,7 @@ router.post('/api/videos', (req: Request, res: Response) => {
     res.status(201).send(newVideo);
 });
 
-router.put('/api/videos/:id', (req: Request, res: Response) => {
+router.put('/:id', (req: Request, res: Response) => {
     const id = +req.params.id;
     const newDate = new Date();
 

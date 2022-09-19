@@ -50,7 +50,7 @@ app.get('/students/:id_student', (req: Request, res: Response) => {
 // })
 
 
-app.use('/hometask_01', router);
+app.use('/videos', router);
 app.use('/testing', allDeleteRouter);
 
 

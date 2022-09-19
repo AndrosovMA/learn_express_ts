@@ -51,7 +51,7 @@ app.get('/students/:id_student', (req: Request, res: Response) => {
 
 
 app.use('/hometask_01', router);
-app.use('/api', allDeleteRouter);
+app.use('/testing', allDeleteRouter);
 
 
 //start app

@@ -1,7 +1,7 @@
 import express, {Request, Response} from 'express'
 import bodyParser from "body-parser";
 import {router} from "./router/router";
-import {allDelete} from "./router/allDelete";
+import {allDeleteRouter} from "./router/allDeleteRouter";
 
 //create express app
 const app = express();
@@ -51,7 +51,7 @@ app.get('/students/:id_student', (req: Request, res: Response) => {
 
 
 app.use('/hometask_01', router);
-app.use('/ht_01', allDelete);
+app.use('/ht_01', allDeleteRouter);
 
 
 //start app

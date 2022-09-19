@@ -36,7 +36,7 @@ router.delete('/api/videos/:id', (req: Request, res: Response) => {
     res.send(404);
 });
 
-router.post('/api/videos/', (req: Request, res: Response) => {
+router.post('/api/videos', (req: Request, res: Response) => {
     const date = new Date();
 
     const newVideo = {

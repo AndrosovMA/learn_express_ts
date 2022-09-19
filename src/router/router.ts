@@ -6,7 +6,7 @@ export const router = Router();
 //вместо app теперь испльзуем router
 
 
-router.get('/', (req: Request, res: Response) => {
+router.get('', (req: Request, res: Response) => {
     res.send(dataBase);
 });
 
@@ -36,7 +36,7 @@ router.delete('/:id', (req: Request, res: Response) => {
     res.send(404);
 });
 
-router.post('/', (req: Request, res: Response) => {
+router.post('', (req: Request, res: Response) => {
     const date = new Date();
 
     const newVideo = {

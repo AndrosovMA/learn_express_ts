@@ -2,6 +2,7 @@ import express, {Request, Response} from 'express'
 import bodyParser from "body-parser";
 import {router} from "./router/router";
 import {allDeleteRouter} from "./router/allDeleteRouter";
+import {dataBase} from "./data";
 
 //create express app
 const app = express();
@@ -12,46 +13,114 @@ const parserMiddleware = bodyParser();
 app.use(parserMiddleware)
 
 
-const products = [{title: 'tomato'}, {title: 'milk'}]
-const addresses = [{value: 'lenina 10'}, {value: 'komenda 20'}]
-const students = [{id: '1', firstName: 'Max'}, {id: '2', firstName: 'Ivan'}]
 
+app.use('/testing', allDeleteRouter);
 
+app.get('/videos', (req: Request, res: Response) => {
+    res.send(dataBase);
+});
 
-app.get('/products', (req: Request, res: Response) => {
-  res.send(products);
-})
+app.get('/videos/:id', (req: Request, res: Response) => {
+    const id = req.params.id;
 
-app.get('/addresses', (req: Request, res: Response) => {
- res.send(addresses) ;
-})
+    const data = dataBase.find(el => el['id'] === +id);
 
-//uri параметры - продолжение строки (меняет роутинг)
-// через свойства params можем обратиться к данным после :
-// : двоеточие это фишка express
-app.get('/students/:id_student', (req: Request, res: Response) => {
-    let id_student = req.params.id_student;
-    let student = students.find(el => el.id === id_student);
+    if (data) {
+        res.send(data);
 
-    if (student) {
-        res.send(student.firstName);
     } else {
         res.send(404);
     }
 })
 
+app.delete('/videos/:id', (req: Request, res: Response) => {
+    const id = +req.params.id;
 
-//query параметры - ?firstName
-//http://localhost:3000/students?firstName
+    for (let i = 0; i < dataBase.length; i++) {
+        if (dataBase[i].id === id) {
+            dataBase.splice(i, 1);
+            res.send(204);
+            return;
+        }
+    }
+    res.send(404);
+});
+
+app.post('/videos', (req: Request, res: Response) => {
+    const date = new Date();
+
+    const newVideo = {
+        "id": +new Date(),
+        "title": req.body.title,
+        "author": req.body.author,
+        "canBeDownloaded": true,
+        "minAgeRestriction": null,
+        "createdAt": date.toISOString(),
+        "publicationDate": date.toISOString(),
+        "availableResolutions": [
+            "P144"
+        ]
+    }
+
+    dataBase.push(newVideo);
+
+    res.status(201).send(newVideo);
+});
+
+app.put('/videos/:id', (req: Request, res: Response) => {
+    const id = +req.params.id;
+    const newDate = new Date();
+
+    if (Object.keys(req.body).length !== 0) {
+        for (let i = 0; i < dataBase.length; i++) {
+            if (dataBase[i].id === id) {
+
+                dataBase[i].title = req.body.title;
+                dataBase[i].author = req.body.author;
+                dataBase[i].availableResolutions = req.body.availableResolutions;
+                dataBase[i].canBeDownloaded = req.body.canBeDownloaded;
+                dataBase[i].minAgeRestriction = req.body.minAgeRestriction;
+                dataBase[i].publicationDate = req.body.publicationDate;
+
+                res.send(201); //Created
+                return;
+            }
+        }
+
+        res.send(404); //Not Found
+    }
+
+    res.send(204); //No Content
+
+});
 
 
-// app.get('/hometask_01/api/videos', (req: Request, res: Response) => {
-//     res.send(dataBase)
-// })
+type BodyRequestPostVideo = {
+    "title": "string",
+    "author": "string",
+    "availableResolutions": [
+        "P144"
+    ]
+}
 
+type NewVideos = {
+    id: number,
+    title: string,
+    author: string,
+    canBeDownloaded: boolean,
+    minAgeRestriction: number | null,
+    createdAt: string,
+    publicationDate: string,
+    availableResolutions: Array<string>
+}
 
-app.use('/videos', router);
-app.use('/testing', allDeleteRouter);
+type IncorrectVideos = {
+    errorsMessages: {
+        message: "string",
+        field: "string"
+    }
+}
+
 
 
 //start app

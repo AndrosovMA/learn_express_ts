@@ -52,7 +52,7 @@ app.post('/videos', (req: Request, res: Response) => {
         "id": +new Date(),
         "title": req.body.title,
         "author": req.body.author,
-        "canBeDownloaded": true,
+        "canBeDownloaded": false,
         "minAgeRestriction": null,
         "createdAt": nowDate.toISOString(),
         "publicationDate": publicationDate.toISOString(),

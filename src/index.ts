@@ -2,6 +2,7 @@ import express, {Request, Response} from 'express'
 import bodyParser from "body-parser";
 import {allDeleteRouter} from "./router/allDeleteRouter";
 import {dataBase} from "./data";
+import {isBoolean} from "util";
 
 const app = express();
 
@@ -9,6 +10,10 @@ const port = process.env.PORT || 3003;
 
 const parserMiddleware = bodyParser();
 app.use(parserMiddleware)
+
+
+
+
 
 
 app.get('/videos', (req: Request, res: Response) => {
@@ -70,6 +75,78 @@ app.put('/videos/:id', (req: Request, res: Response) => {
     const id = +req.params.id;
 
     if (Object.keys(req.body).length !== 0) {
+
+        if (!req.body.title.trim() || req.body.title.length < 41)  {
+            let errorMessage = [
+                {
+                    "message": "не корректно заполненное название",
+                    "field": "title"
+                }
+            ]
+            res.status(400).send(errorMessage);
+            return
+        }
+
+        if (!req.body.author.trim() || req.body.author.length < 21) {
+            let errorMessage = [
+                {
+                    "message": "не корректно указан автор",
+                    "field": "author"
+                }
+            ]
+            res.status(400).send(errorMessage);
+            return
+        }
+
+        if (req.body.availableResolutions.length === 0) {
+            let errorMessage = [
+                {
+                    "message": "не указана резолючия",
+                    "field": "availableResolutions"
+                }
+            ]
+            res.status(400).send(errorMessage);
+            return
+        }
+
+        if (typeof req.body.canBeDownloaded !== "boolean") {
+            let errorMessage = [
+                {
+                    "message": "необходимоу указать булево значение",
+                    "field": "canBeDownloaded"
+                }
+            ]
+            res.status(400).send(errorMessage);
+            return
+        }
+
+        if (req.body.minAgeRestriction < 1 || req.body.minAgeRestriction > 18) {
+            let errorMessage = [
+                {
+                    "message": "не корректно указан возраст",
+                    "field": "minAgeRestriction"
+                }
+            ]
+            res.status(400).send(errorMessage);
+            return
+        }
+
+        if (req.body.publicationDate) {
+            const validDate = / /.test(req.body.publicationDate);
+
+            let errorMessage = [
+                {
+                    "message": "не корректно указана дата",
+                    "field": "publicationDate"
+                }
+            ]
+            res.status(400).send(errorMessage);
+            return
+        }
+
+
+
+
         for (let i = 0; i < dataBase.length; i++) {
             if (dataBase[i].id === id) {
 
@@ -80,7 +157,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
                 dataBase[i].minAgeRestriction = req.body.minAgeRestriction;
                 dataBase[i].publicationDate = req.body.publicationDate;
 
-                res.send(204); //201 Created
+                res.send(204); //No Content
                 return;
             }
         }
@@ -89,8 +166,8 @@ app.put('/videos/:id', (req: Request, res: Response) => {
     }
 
     res.send(204); //No Content
-
 });
+
 
 app.use('/testing', allDeleteRouter);
 
@@ -127,6 +204,8 @@ type IncorrectVideos = {
         field: "string"
     }
 }
+
+type AvailableResolutions = [ 'P144', 'P240', 'P360', 'P480', 'P720', 'P1080', 'P1440', 'P2160' ]
 
 
 

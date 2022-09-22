@@ -103,8 +103,8 @@ app.put('/videos/:id', (req: Request, res: Response) => {
 
             if (req.body.minAgeRestriction < 1 || req.body.minAgeRestriction > 18) {
                 errorMessage.push({
-                    "message": "необходимоу указать булево значение",
-                    "field": "canBeDownloaded"
+                    "message": "необходимоу указать корректный возраст",
+                    "field": "minAgeRestriction"
                 })
             }
 

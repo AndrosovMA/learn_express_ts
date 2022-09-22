@@ -76,7 +76,8 @@ app.put('/videos/:id', (req: Request, res: Response) => {
 
     if (Object.keys(req.body).length !== 0) {
 
-        if (!req.body.title.trim() || req.body.title.length < 41)  {
+
+        if (!req.body.title.trim() || req.body.title.length > 40)  {
             let errorMessage = [
                 {
                     "message": "не корректно заполненное название",
@@ -84,7 +85,6 @@ app.put('/videos/:id', (req: Request, res: Response) => {
                 }
             ]
             res.status(400).send(errorMessage);
-            return
         }
 
         if (!req.body.author.trim() || req.body.author.length < 21) {
@@ -95,7 +95,6 @@ app.put('/videos/:id', (req: Request, res: Response) => {
                 }
             ]
             res.status(400).send(errorMessage);
-            return
         }
 
         if (req.body.availableResolutions.length === 0) {
@@ -106,7 +105,6 @@ app.put('/videos/:id', (req: Request, res: Response) => {
                 }
             ]
             res.status(400).send(errorMessage);
-            return
         }
 
         if (typeof req.body.canBeDownloaded !== "boolean") {
@@ -117,7 +115,6 @@ app.put('/videos/:id', (req: Request, res: Response) => {
                 }
             ]
             res.status(400).send(errorMessage);
-            return
         }
 
         if (req.body.minAgeRestriction < 1 || req.body.minAgeRestriction > 18) {
@@ -128,7 +125,6 @@ app.put('/videos/:id', (req: Request, res: Response) => {
                 }
             ]
             res.status(400).send(errorMessage);
-            return
         }
 
         if (req.body.publicationDate) {
@@ -141,10 +137,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
                 }
             ]
             res.status(400).send(errorMessage);
-            return
         }
-
-
 
 
         for (let i = 0; i < dataBase.length; i++) {

@@ -12,10 +12,6 @@ const parserMiddleware = bodyParser();
 app.use(parserMiddleware)
 
 
-
-
-
-
 app.get('/videos', (req: Request, res: Response) => {
     res.send(dataBase);
 });
@@ -72,93 +68,83 @@ app.post('/videos', (req: Request, res: Response) => {
 });
 
 app.put('/videos/:id', (req: Request, res: Response) => {
-    const id = +req.params.id;
+        const id = +req.params.id;
+        let errorMessage = [];
 
-    if (Object.keys(req.body).length !== 0) {
+        if (Object.keys(req.body).length !== 0) {
 
-        if ( req.body.title === null || !req.body.title.trim() || req.body.title.length > 40)  {
-            let errorMessage = [
-                {
+            if (req.body.title === null || !req.body.title.trim() || req.body.title.length > 40) {
+                errorMessage.push({
                     "message": "не корректно заполненное название",
                     "field": "title"
-                }
-            ]
-            res.status(400).send(errorMessage);
-        }
+                })
+            }
 
-        if (!req.body.author.trim() || req.body.author.length > 20) {
-            let errorMessage = [
-                {
+            if (!req.body.author.trim() || req.body.author.length > 20) {
+                errorMessage.push({
                     "message": "не корректно указан автор",
                     "field": "author"
-                }
-            ]
-            res.status(400).send(errorMessage);
-        }
+                })
+            }
 
-        if (req.body.availableResolutions.length === 0) {
-            let errorMessage = [
-                {
+            if (req.body.availableResolutions.length === 0) {
+                errorMessage.push({
                     "message": "не указана резолючия",
                     "field": "availableResolutions"
-                }
-            ]
-            res.status(400).send(errorMessage);
-        }
+                })
+            }
 
-        if (typeof req.body.canBeDownloaded !== "boolean") {
-            let errorMessage = [
-                {
+            if (typeof req.body.canBeDownloaded !== "boolean") {
+                errorMessage.push({
                     "message": "необходимоу указать булево значение",
                     "field": "canBeDownloaded"
-                }
-            ]
-            res.status(400).send(errorMessage);
-        }
-
-        if (req.body.minAgeRestriction < 1 || req.body.minAgeRestriction > 18) {
-            let errorMessage = [
-                {
-                    "message": "не корректно указан возраст",
-                    "field": "minAgeRestriction"
-                }
-            ]
-            res.status(400).send(errorMessage);
-        }
-
-        // if (req.body.publicationDate) {
-        //     const validDate = / /.test(req.body.publicationDate);
-        //
-        //     let errorMessage = [
-        //         {
-        //             "message": "не корректно указана дата",
-        //             "field": "publicationDate"
-        //         }
-        //     ]
-        //     res.status(400).send(errorMessage);
-        // }
-
-
-        for (let i = 0; i < dataBase.length; i++) {
-            if (dataBase[i].id === id) {
-
-                dataBase[i].title = req.body.title;
-                dataBase[i].author = req.body.author;
-                dataBase[i].availableResolutions = req.body.availableResolutions;
-                dataBase[i].canBeDownloaded = req.body.canBeDownloaded;
-                dataBase[i].minAgeRestriction = req.body.minAgeRestriction;
-                dataBase[i].publicationDate = req.body.publicationDate;
-
-                res.send(204); //No Content
-                return;
+                })
             }
+
+            if (req.body.minAgeRestriction < 1 || req.body.minAgeRestriction > 18) {
+                errorMessage.push({
+                    "message": "необходимоу указать булево значение",
+                    "field": "canBeDownloaded"
+                })
+            }
+
+            // if (req.body.publicationDate) {
+            //     const validDate = / /.test(req.body.publicationDate);
+            //
+            //     let errorMessage = [
+            //         {
+            //             "message": "не корректно указана дата",
+            //             "field": "publicationDate"
+            //         }
+            //     ]
+            //     res.status(400).send(errorMessage);
+            // }
+
+            if (errorMessage.length > 0) {
+                res.status(400).send(errorMessage);
+            }
+
+            for (let i = 0; i < dataBase.length; i++) {
+                if (dataBase[i].id === id) {
+
+                    dataBase[i].title = req.body.title;
+                    dataBase[i].author = req.body.author;
+                    dataBase[i].availableResolutions = req.body.availableResolutions;
+                    dataBase[i].canBeDownloaded = req.body.canBeDownloaded;
+                    dataBase[i].minAgeRestriction = req.body.minAgeRestriction;
+                    dataBase[i].publicationDate = req.body.publicationDate;
+
+                    res.send(204); //No Content
+                    return;
+                }
+            }
+
+            res.send(404); //Not Found
         }
 
-        res.send(404); //Not Found
+        res.send(204); //No Content
     }
-
-    res.send(204); //No Content
-});
+)
 
 
 app.use('/testing', allDeleteRouter);
@@ -197,7 +183,7 @@ type IncorrectVideos = {
     }
 }
 
-type AvailableResolutions = [ 'P144', 'P240', 'P360', 'P480', 'P720', 'P1080', 'P1440', 'P2160' ]
+type AvailableResolutions = ['P144', 'P240', 'P360', 'P480', 'P720', 'P1080', 'P1440', 'P2160']
 
 
 

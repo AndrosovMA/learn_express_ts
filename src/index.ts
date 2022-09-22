@@ -68,7 +68,6 @@ app.post('/videos', (req: Request, res: Response) => {
 
 app.put('/videos/:id', (req: Request, res: Response) => {
     const id = +req.params.id;
-    const newDate = new Date();
 
     if (Object.keys(req.body).length !== 0) {
         for (let i = 0; i < dataBase.length; i++) {
@@ -81,7 +80,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
                 dataBase[i].minAgeRestriction = req.body.minAgeRestriction;
                 dataBase[i].publicationDate = req.body.publicationDate;
 
-                res.send(201); //Created
+                res.send(204); //201 Created
                 return;
             }
         }

@@ -121,7 +121,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
             // }
 
             if (errorMessage.length > 0) {
-                res.status(400).send(errorMessage);
+                res.status(400).send( { errorsMessages: errorMessage});
             }
 
             for (let i = 0; i < dataBase.length; i++) {

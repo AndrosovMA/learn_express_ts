@@ -11,7 +11,6 @@ const parserMiddleware = bodyParser();
 app.use(parserMiddleware)
 
 
-
 app.get('/videos', (req: Request, res: Response) => {
     res.send(dataBase);
 });
@@ -43,7 +42,10 @@ app.delete('/videos/:id', (req: Request, res: Response) => {
 });
 
 app.post('/videos', (req: Request, res: Response) => {
-    const date = new Date();
+    let nowDate = new Date();
+
+    //add 1 day for publicationDate
+    nowDate.setDate(nowDate.getDate() + 1)
 
     const newVideo = {
         "id": +new Date(),
@@ -51,8 +53,8 @@ app.post('/videos', (req: Request, res: Response) => {
         "author": req.body.author,
         "canBeDownloaded": true,
         "minAgeRestriction": null,
-        "createdAt": date.toISOString(),
-        "publicationDate": date.toISOString(),
+        "createdAt": nowDate.toISOString(),
+        "publicationDate": nowDate.toISOString(),
         "availableResolutions": [
             "P144"
         ]
@@ -76,7 +78,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
                 dataBase[i].availableResolutions = req.body.availableResolutions;
                 dataBase[i].canBeDownloaded = req.body.canBeDownloaded;
                 dataBase[i].minAgeRestriction = req.body.minAgeRestriction;
-                dataBase[i].publicationDate = newDate.toISOString();
+                dataBase[i].publicationDate = req.body.publicationDate;
 
                 res.send(201); //Created
                 return;
@@ -92,6 +94,14 @@ app.put('/videos/:id', (req: Request, res: Response) => {
 
 app.use('/testing', allDeleteRouter);
 
+
+//start app
+app.listen(port, () => {
+    console.log(`App listening at http://localhost:${port}`);
+});
+
+
+//types
 type BodyRequestPostVideo = {
     "title": "string",
     "author": "string",
@@ -120,7 +130,3 @@ type IncorrectVideos = {
 
 
 
-//start app
-app.listen(port, () => {
-  console.log(`App listening at http://localhost:${port}`);
-});

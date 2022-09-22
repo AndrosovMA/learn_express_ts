@@ -111,10 +111,12 @@ app.put('/videos/:id', (req: Request, res: Response) => {
             if (req.body.publicationDate) {
                 const validDate = /^(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))$/.test(req.body.publicationDate);
 
-                errorMessage.push({
-                    "message": "не корректно указана дата",
-                    "field": "publicationDate"
-                })
+                if (!validDate) {
+                    errorMessage.push({
+                        "message": "не корректно указана дата",
+                        "field": "publicationDate"
+                    })
+                }
             }
 
             if (errorMessage.length > 0) {

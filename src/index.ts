@@ -49,22 +49,51 @@ app.post('/videos', (req: Request, res: Response) => {
     let publicationDate = new Date();
     publicationDate.setDate(publicationDate.getDate() + 1);
 
-    const newVideo = {
-        "id": +new Date(),
-        "title": req.body.title,
-        "author": req.body.author,
-        "canBeDownloaded": false,
-        "minAgeRestriction": null,
-        "createdAt": nowDate.toISOString(),
-        "publicationDate": publicationDate.toISOString(),
-        "availableResolutions": [
-            "P144"
-        ]
+    let errorMessage = [];
+
+    if (Object.keys(req.body).length !== 0) {
+
+        if (req.body.title === null || !req.body.title.trim() || req.body.title.length > 40) {
+            errorMessage.push({
+                "message": "не корректно заполненное название",
+                "field": "title"
+            })
+        }
+
+        if (!req.body.author.trim() || req.body.author.length > 20) {
+            errorMessage.push({
+                "message": "не корректно указан автор",
+                "field": "author"
+            })
+        }
+
+        if (req.body.availableResolutions.length === 0) {
+            errorMessage.push({
+                "message": "не указана резолючия",
+                "field": "availableResolutions"
+            })
+        }
+
+        if (errorMessage.length > 0) {
+            res.status(400).send({errorsMessages: errorMessage});
+        } else {
+            const newVideo = {
+                "id": +new Date(),
+                "title": req.body.title,
+                "author": req.body.author,
+                "canBeDownloaded": false,
+                "minAgeRestriction": null,
+                "createdAt": nowDate.toISOString(),
+                "publicationDate": publicationDate.toISOString(),
+                "availableResolutions": [
+                    "P144"
+                ]
+            }
+            dataBase.push(newVideo);
+
+            res.status(201).send(newVideo);
+        }
     }
-
-    dataBase.push(newVideo);
-
-    res.status(201).send(newVideo);
 });
 
 app.put('/videos/:id', (req: Request, res: Response) => {

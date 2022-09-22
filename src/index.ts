@@ -127,17 +127,17 @@ app.put('/videos/:id', (req: Request, res: Response) => {
             res.status(400).send(errorMessage);
         }
 
-        if (req.body.publicationDate) {
-            const validDate = / /.test(req.body.publicationDate);
-
-            let errorMessage = [
-                {
-                    "message": "не корректно указана дата",
-                    "field": "publicationDate"
-                }
-            ]
-            res.status(400).send(errorMessage);
-        }
+        // if (req.body.publicationDate) {
+        //     const validDate = / /.test(req.body.publicationDate);
+        //
+        //     let errorMessage = [
+        //         {
+        //             "message": "не корректно указана дата",
+        //             "field": "publicationDate"
+        //         }
+        //     ]
+        //     res.status(400).send(errorMessage);
+        // }
 
 
         for (let i = 0; i < dataBase.length; i++) {

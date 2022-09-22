@@ -77,7 +77,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
     if (Object.keys(req.body).length !== 0) {
 
 
-        if (!req.body.title.trim() || req.body.title.length > 40)  {
+        if (!req.body.title.trim() || req.body.title.length > 40 || req.body.title.length === null)  {
             let errorMessage = [
                 {
                     "message": "не корректно заполненное название",

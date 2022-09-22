@@ -87,7 +87,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
             res.status(400).send(errorMessage);
         }
 
-        if (!req.body.author.trim() || req.body.author.length < 21) {
+        if (!req.body.author.trim() || req.body.author.length > 20) {
             let errorMessage = [
                 {
                     "message": "не корректно указан автор",

@@ -45,7 +45,8 @@ app.post('/videos', (req: Request, res: Response) => {
     let nowDate = new Date();
 
     //add 1 day for publicationDate
-    nowDate.setDate(nowDate.getDate() + 1)
+    let publicationDate = new Date();
+    publicationDate.setDate(publicationDate.getDate() + 1);
 
     const newVideo = {
         "id": +new Date(),
@@ -54,7 +55,7 @@ app.post('/videos', (req: Request, res: Response) => {
         "canBeDownloaded": true,
         "minAgeRestriction": null,
         "createdAt": nowDate.toISOString(),
-        "publicationDate": nowDate.toISOString(),
+        "publicationDate": publicationDate.toISOString(),
         "availableResolutions": [
             "P144"
         ]

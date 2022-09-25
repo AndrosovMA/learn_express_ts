@@ -11,6 +11,13 @@ const port = process.env.PORT || 3003;
 const parserMiddleware = bodyParser();
 app.use(parserMiddleware)
 
+const availableResolutions = ['P144', 'P240', 'P360', 'P480', 'P720', 'P1080', 'P1440', 'P2160'];
+let isAvailableResolutions = (availableResolutions: string[]) => {
+    let isResolution = availableResolutions.every(item => availableResolutions.includes(item))
+
+    return isResolution
+}
+
 
 app.get('/videos', (req: Request, res: Response) => {
     res.send(dataBase);
@@ -70,6 +77,13 @@ app.post('/videos', (req: Request, res: Response) => {
         if (req.body.availableResolutions.length === 0) {
             errorMessage.push({
                 "message": "не указана резолючия",
+                "field": "availableResolutions"
+            })
+        }
+
+        if (!isAvailableResolutions(req.body.availableResolutions)) {
+            errorMessage.push({
+                "message": "не правильно указана резолюция",
                 "field": "availableResolutions"
             })
         }
@@ -171,9 +185,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
         }
 
         res.send(204); //No Content
-    }
-)
-
+    });
 
 app.use('/testing', allDeleteRouter);
 
@@ -211,7 +223,6 @@ type IncorrectVideos = {
     }
 }
 
-type AvailableResolutions = ['P144', 'P240', 'P360', 'P480', 'P720', 'P1080', 'P1440', 'P2160']
 
 
 

@@ -2,7 +2,6 @@ import express, {Request, Response} from 'express'
 import bodyParser from "body-parser";
 import {allDeleteRouter} from "./router/allDeleteRouter";
 import {dataBase} from "./data";
-import {isBoolean} from "util";
 
 const app = express();
 
@@ -12,10 +11,9 @@ const parserMiddleware = bodyParser();
 app.use(parserMiddleware)
 
 const availableResolutions = ['P144', 'P240', 'P360', 'P480', 'P720', 'P1080', 'P1440', 'P2160'];
-let isAvailableResolutions = (availableResolutions: string[]) => {
-    let isResolution = availableResolutions.every(item => availableResolutions.includes(item))
 
-    return isResolution
+let isAvailableResolutions = (resolutions: string[]) => {
+    return resolutions.every(item => availableResolutions.includes(item))
 }
 
 

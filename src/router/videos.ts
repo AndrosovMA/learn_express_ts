@@ -1,6 +1,6 @@
 import {Request, Response} from 'express'
 import {Router} from "express";
-import {dataBase} from "../data";
+import {dataVideos} from "../data";
 
 export const videos = Router(); //вместо app теперь испльзуем router
 
@@ -9,17 +9,17 @@ const availableResolutions = ['P144', 'P240', 'P360', 'P480', 'P720', 'P1080', '
 
 let isAvailableResolutions = (resolutions: string[]) => {
     return resolutions.every(item => availableResolutions.includes(item))
-}
+};
 
 
 videos.get('/', (req: Request, res: Response) => {
-    res.send(dataBase);
+    res.send(dataVideos);
 });
 
 videos.get('/:id', (req: Request, res: Response) => {
     const id = req.params.id;
 
-    const data = dataBase.find(el => el['id'] === +id);
+    const data = dataVideos.find(el => el['id'] === +id);
 
     if (data) {
         res.send(data);
@@ -32,9 +32,9 @@ videos.get('/:id', (req: Request, res: Response) => {
 videos.delete('/:id', (req: Request, res: Response) => {
     const id = +req.params.id;
 
-    for (let i = 0; i < dataBase.length; i++) {
-        if (dataBase[i].id === id) {
-            dataBase.splice(i, 1);
+    for (let i = 0; i < dataVideos.length; i++) {
+        if (dataVideos[i].id === id) {
+            dataVideos.splice(i, 1);
             res.send(204);
             return;
         }
@@ -96,7 +96,7 @@ videos.post('/', (req: Request, res: Response) => {
                     "P144"
                 ]
             }
-            dataBase.push(newVideo);
+            dataVideos.push(newVideo);
 
             res.status(201).send(newVideo);
         }
@@ -159,15 +159,15 @@ videos.put('/:id', (req: Request, res: Response) => {
             res.status(400).send({errorsMessages: errorMessage});
         }
 
-        for (let i = 0; i < dataBase.length; i++) {
-            if (dataBase[i].id === id) {
+        for (let i = 0; i < dataVideos.length; i++) {
+            if (dataVideos[i].id === id) {
 
-                dataBase[i].title = req.body.title;
-                dataBase[i].author = req.body.author;
-                dataBase[i].availableResolutions = req.body.availableResolutions;
-                dataBase[i].canBeDownloaded = req.body.canBeDownloaded;
-                dataBase[i].minAgeRestriction = req.body.minAgeRestriction;
-                dataBase[i].publicationDate = req.body.publicationDate;
+                dataVideos[i].title = req.body.title;
+                dataVideos[i].author = req.body.author;
+                dataVideos[i].availableResolutions = req.body.availableResolutions;
+                dataVideos[i].canBeDownloaded = req.body.canBeDownloaded;
+                dataVideos[i].minAgeRestriction = req.body.minAgeRestriction;
+                dataVideos[i].publicationDate = req.body.publicationDate;
 
                 res.send(204); //No Content
                 return;
@@ -179,3 +179,32 @@ videos.put('/:id', (req: Request, res: Response) => {
 
     res.send(204); //No Content
 });
+
+
+
+//types
+type BodyRequestPostVideo = {
+    "title": "string",
+    "author": "string",
+    "availableResolutions": [
+        "P144"
+    ]
+}
+
+type NewVideos = {
+    id: number,
+    title: string,
+    author: string,
+    canBeDownloaded: boolean,
+    minAgeRestriction: number | null,
+    createdAt: string,
+    publicationDate: string,
+    availableResolutions: Array<string>
+}
+
+type IncorrectVideos = {
+    errorsMessages: {
+        message: "string",
+        field: "string"
+    }
+}

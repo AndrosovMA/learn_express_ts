@@ -1,8 +1,8 @@
-import express, {Request, Response} from 'express'
+import express from 'express'
 import bodyParser from "body-parser";
 import {testing} from "./router/testing";
-import {dataBase} from "./data";
 import {videos} from "./router/videos";
+import {blogs} from "./router/blogs";
 
 const app = express();
 
@@ -12,13 +12,17 @@ const parserMiddleware = bodyParser();
 app.use(parserMiddleware)
 
 
-//Videos
+//Testing
 app.use('/testing', testing);
 
+//Videos
 app.use('/videos', videos)
 
+//Blogs
+app.use('/blogs', blogs)
 
 
+//Posts
 
 
 
@@ -28,35 +32,3 @@ app.use('/videos', videos)
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);
 });
-
-
-//types
-type BodyRequestPostVideo = {
-    "title": "string",
-    "author": "string",
-    "availableResolutions": [
-        "P144"
-    ]
-}
-
-type NewVideos = {
-    id: number,
-    title: string,
-    author: string,
-    canBeDownloaded: boolean,
-    minAgeRestriction: number | null,
-    createdAt: string,
-    publicationDate: string,
-    availableResolutions: Array<string>
-}
-
-type IncorrectVideos = {
-    errorsMessages: {
-        message: "string",
-        field: "string"
-    }
-}
-
-
-
-

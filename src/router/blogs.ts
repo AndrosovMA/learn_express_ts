@@ -46,7 +46,7 @@ blogs.post('/', authorizationMiddleware,
         const errors = validationResult(req);
 
         if (!errors.isEmpty()) {
-            const allError = errors.array().map(el => {
+            const allError = errors.array({onlyFirstError: true}).map(el => {
                 return {
                     "message": el.msg,
                     "field": el.param

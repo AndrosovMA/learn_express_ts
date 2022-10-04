@@ -39,7 +39,7 @@ posts.post('/', authorizationMiddleware,
     body('title').trim().notEmpty().isLength({max: 30}).withMessage("некорректно указано название"),
     body('shortDescription').trim().notEmpty().isLength({max: 100}).withMessage("некорректно указано описание"),
     body('content').trim().notEmpty().isLength({max: 1000}).withMessage("некорректно указан контент"),
-    body('blogId').trim().notEmpty().isLength({max: 100}).withMessage("некорректно указан id"),
+    body('blogId').trim().notEmpty().isLength({max: 200}).withMessage("некорректно указан id"),
 
     (req: Request, res: Response) => {
 

@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import {testing} from "./router/testing";
 import {videos} from "./router/videos";
 import {blogs} from "./router/blogs";
+import {posts} from "./router/posts";
 
 const app = express();
 
@@ -21,10 +22,8 @@ app.use('/videos', videos)
 //Blogs
 app.use('/blogs', blogs)
 
-
 //Posts
-
-
+app.use('/posts', posts)
 
 
 

@@ -30,7 +30,7 @@ export const blogsRepositories = {
     },
 
     updateBlog(id: string, newName: string, newUrl: string) {
-        for (let i = 0; i < dataBlogs.length -1; i++) {
+        for (let i = 0; i < dataBlogs.length; i++) {
             if(dataBlogs[i].id === id) {
                 dataBlogs[i].name = newName;
                 dataBlogs[i].youtubeUrl = newUrl;

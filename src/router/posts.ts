@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from 'express'
 import {Router} from "express";
-import {body, validationResult} from "express-validator";
+import {body, param, validationResult} from "express-validator";
 import {postsRepositories} from "../repositories/posts-repositories";
 
 
@@ -45,6 +45,8 @@ posts.post('/', authorizationMiddleware,
 
         const errors = validationResult(req);
 
+        const isBlogId = postsRepositories.checkBlogId(req.params.blogId);
+
         if (!errors.isEmpty()) {
             const allError = errors.array({onlyFirstError: true}).map(el => {
                 return {
@@ -53,7 +55,22 @@ posts.post('/', authorizationMiddleware,
                 }
             })
 
+            if (!isBlogId) {
+                console.log('error ID')
+                allError.push({
+                    "message": "sdfsdfsdf",
+                    "field": "blogId"
+                })
+            }
+
             return res.status(400).json({errorsMessages: allError});
+        }
+
+        if (!isBlogId) {
+            return res.status(400).send({errorsMessages: {
+                    "message": "некорректно указан id",
+                    "field": "blogId"
+                }});
         }
 
         const newPost = postsRepositories.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
@@ -94,6 +111,8 @@ posts.put('/:id', authorizationMiddleware,
 
         const errors = validationResult(req);
 
+        const isBlogId = postsRepositories.checkBlogId(req.params.blogId);
+
         if (!errors.isEmpty()) {
             const allError = errors.array({onlyFirstError: true}).map(el => {
                 return {
@@ -102,7 +121,23 @@ posts.put('/:id', authorizationMiddleware,
                 }
             })
 
+            if (!isBlogId) {
+                console.log('error ID')
+                allError.push({
+                    "message": "sdfsdfsdf",
+                    "field": "blogId"
+                })
+            }
+
+
             return res.status(400).json({errorsMessages: allError});
+        }
+
+        if (!isBlogId) {
+            return res.status(400).send({errorsMessages: {
+                    "message": "некорректно указан id",
+                    "field": "blogId"
+                }});
         }
 
         const id = req.params.id;

@@ -1,5 +1,4 @@
-import {dataPosts} from "../data";
-import {dataBlogs} from "../data";
+import {dataBlogs, dataPosts} from "../data";
 
 export const postsRepositories = {
     findPosts() {
@@ -67,6 +66,10 @@ export const postsRepositories = {
         }
 
         return isDeleteBlog;
+    },
+
+    checkBlogId(blogId: string) {
+        return dataBlogs.find(el => el.id === blogId)
     }
 }
 

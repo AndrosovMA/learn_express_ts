@@ -46,6 +46,8 @@ blogs.post('/', authorizationMiddleware,
         const errors = validationResult(req);
 
         if (!errors.isEmpty()) {
+            debugger;
+
             const allError = errors.array({onlyFirstError: true}).map(el => {
                 return {
                     "message": el.msg,
@@ -68,6 +70,7 @@ blogs.delete('/:id', authorizationMiddleware, (req: Request, res: Response) => {
     const id = req.params.id;
 
     let isDeletedBlog = blogsRepositories.deleteBlog(id);
+
 
     if (isDeletedBlog) {
         res.sendStatus(204)

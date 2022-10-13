@@ -1,7 +1,6 @@
 import {collectionBlogs} from "./db";
 
 
-
 export const blogsRepositories = {
     async findBlogs(): Promise<Blog[]> {
         return await collectionBlogs.find({}).toArray()
@@ -49,6 +48,7 @@ export const blogsRepositories = {
 
 //Types
 export type Blog = {
+    "_id"?: string,
     "id": string,
     "name": string,
     "youtubeUrl": string,

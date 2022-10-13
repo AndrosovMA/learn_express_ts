@@ -1,6 +1,6 @@
 import {dataBlogs, dataPosts} from "../data";
 
-export const postsRepositories = {
+export const postsInMemoryRepositories = {
     findPosts() {
         return dataPosts
     },
@@ -16,7 +16,7 @@ export const postsRepositories = {
     },
 
     createPost(title: string, shortDescription: string, content: string, blogId: string) {
-        const id = new Date()
+        const nowDate = new Date()
 
         const blog = dataBlogs.find(el => el['id'] === blogId);
         if (!blog) return false;
@@ -25,12 +25,13 @@ export const postsRepositories = {
             return false
         } else {
             const newPost: Post = {
-                "id": id.toISOString(),
+                "id": nowDate.toISOString(),
                 "title": title,
                 "shortDescription": shortDescription,
                 "content": content,
                 "blogId": blogId,
-                "blogName": blog.name
+                "blogName": blog.name,
+                "createdAt": nowDate.toISOString()
             }
 
             dataPosts.push(newPost)
@@ -80,5 +81,6 @@ type Post = {
     "shortDescription": string,
     "content": string,
     "blogId": string,
-    "blogName": string
+    "blogName": string,
+    "createdAt": string
 }

@@ -1,11 +1,11 @@
 import {dataBlogs} from "../data";
 
 export const blogsRepositories = {
-    findBlogs() {
+    async findBlogs(): Promise<Blog[]> {
         return dataBlogs
     },
 
-    findBlog(id: string | null | undefined) {
+    async findBlog(id: string | null | undefined): Promise<Blog | undefined> {
         const blog = dataBlogs.find(el => el['id'] === id);
 
         if (blog) {
@@ -15,7 +15,7 @@ export const blogsRepositories = {
         }
     },
 
-    createBlog(name:string, youtubeUrl:string) {
+    async createBlog(name:string, youtubeUrl:string): Promise<Blog>  {
         const id = new Date()
 
         const newBlog = {
@@ -29,7 +29,7 @@ export const blogsRepositories = {
         return newBlog;
     },
 
-    updateBlog(id: string, newName: string, newUrl: string) {
+    async updateBlog(id: string, newName: string, newUrl: string): Promise<boolean> {
         for (let i = 0; i < dataBlogs.length; i++) {
             if(dataBlogs[i].id === id) {
                 dataBlogs[i].name = newName;
@@ -42,7 +42,7 @@ export const blogsRepositories = {
         return false;
     },
 
-    deleteBlog(id: string) {
+    async deleteBlog(id: string): Promise<boolean> {
         let isDeleteBlog = false;
 
         for (let i = 0; i < dataBlogs.length; i++) {
@@ -55,4 +55,11 @@ export const blogsRepositories = {
 
         return isDeleteBlog;
     }
+}
+
+//Types
+export type Blog = {
+    "id": string,
+    "name": string,
+    "youtubeUrl": string
 }

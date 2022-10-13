@@ -1,7 +1,7 @@
 import {NextFunction, Request, Response} from 'express'
 import {Router} from "express";
 import {body, validationResult} from "express-validator";
-import {postsRepositories} from "../repositories/posts-repositories";
+import {postsInMemoryRepositories} from "../repositories/posts-in-memory-repositories";
 
 export const posts = Router(); //вместо app теперь испльзуем router
 
@@ -19,7 +19,7 @@ const titleValidation = body('title').trim().notEmpty().isLength({max: 30}).with
 const shortDescriptionValidation = body('shortDescription').trim().notEmpty().isLength({max: 100}).withMessage("некорректно указано описание");
 const contentValidation = body('content').trim().notEmpty().isLength({max: 1000}).withMessage("некорректно указан контент");
 const blogIdExistValidation = body('blogId').custom(async (value) => {
-    const blogId = postsRepositories.checkBlogId(value)
+    const blogId = postsInMemoryRepositories.checkBlogId(value)
     if (!blogId) {
         throw new Error('некорректно указан blogId')
     }
@@ -44,7 +44,7 @@ const checkResultErrorsMiddleware = ((req: Request, res: Response, next: NextFun
 
 
 posts.get('/', (req: Request, res: Response) => {
-    const foundPosts = postsRepositories.findPosts()
+    const foundPosts = postsInMemoryRepositories.findPosts()
 
     res.status(200).send(foundPosts);
 });
@@ -52,7 +52,7 @@ posts.get('/', (req: Request, res: Response) => {
 posts.get('/:id', (req: Request, res: Response) => {
     const id = req.params.id;
 
-    const foundPost = postsRepositories.findPost(id)
+    const foundPost = postsInMemoryRepositories.findPost(id)
 
     if (foundPost) {
         res.send(foundPost);
@@ -67,7 +67,7 @@ posts.post('/', authorizationMiddleware, titleValidation, shortDescriptionValida
 
     (req: Request, res: Response) => {
 
-        const newPost = postsRepositories.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
+        const newPost = postsInMemoryRepositories.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
 
         if (!newPost) res.status(400).send({
             "errorsMessages": [
@@ -86,7 +86,7 @@ posts.delete('/:id', authorizationMiddleware, (req: Request, res: Response) => {
 
     const id = req.params.id;
 
-    let isDeletedBlog = postsRepositories.deletePost(id);
+    let isDeletedBlog = postsInMemoryRepositories.deletePost(id);
 
     if (isDeletedBlog) {
         res.sendStatus(204)
@@ -106,7 +106,7 @@ posts.put('/:id', authorizationMiddleware, titleValidation, shortDescriptionVali
         const newContent = req.body.content;
         const newBlogId = req.body.blogId;
 
-        const isPostUpdate = postsRepositories.updatePost(id, newtitle, newShortDescription, newContent, newBlogId);
+        const isPostUpdate = postsInMemoryRepositories.updatePost(id, newtitle, newShortDescription, newContent, newBlogId);
 
         if (!isPostUpdate) {
             return res.sendStatus(404)

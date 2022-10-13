@@ -1,7 +1,7 @@
 import {NextFunction, Request, Response} from 'express'
 import {Router} from "express";
-import {blogsRepositories} from "../repositories/blogs-repositories";
-import {body, validationResult, header} from 'express-validator';
+import {blogsRepositories} from "../repositories/blogs-db-repositories";
+import {body, validationResult} from 'express-validator';
 
 
 export const blogs = Router(); //вместо app теперь испльзуем router
@@ -36,16 +36,16 @@ const checkResultErrorsMiddleware = ((req: Request, res: Response, next: NextFun
 });
 
 
-blogs.get('/', (req: Request, res: Response) => {
-    const foundBlog = blogsRepositories.findBlogs()
+blogs.get('/', async (req: Request, res: Response) => {
+    const foundBlogs = await blogsRepositories.findBlogs()
 
-    res.status(200).send(foundBlog);
+    res.status(200).send(foundBlogs);
 });
 
-blogs.get('/:id', (req: Request, res: Response) => {
+blogs.get('/:id', async (req: Request, res: Response) => {
     const id = req.params.id;
 
-    const foundBlog = blogsRepositories.findBlog(id)
+    const foundBlog = await blogsRepositories.findBlog(id)
 
     if (foundBlog) {
         res.send(foundBlog);
@@ -57,20 +57,19 @@ blogs.get('/:id', (req: Request, res: Response) => {
 
 blogs.post('/', authorizationMiddleware, nameValidation, youtubeUrlValidation, checkResultErrorsMiddleware,
 
-    (req: Request, res: Response) => {
+    async (req: Request, res: Response) => {
 
-        const newBlog = blogsRepositories.createBlog(req.body.name, req.body.youtubeUrl);
+        const newBlog = await blogsRepositories.createBlog(req.body.name, req.body.youtubeUrl);
 
         res.status(201).send(newBlog)
     }
 )
 
-blogs.delete('/:id', authorizationMiddleware, (req: Request, res: Response) => {
+blogs.delete('/:id', authorizationMiddleware, async (req: Request, res: Response) => {
 
     const id = req.params.id;
 
-    let isDeletedBlog = blogsRepositories.deleteBlog(id);
-
+    let isDeletedBlog = await blogsRepositories.deleteBlog(id);
 
     if (isDeletedBlog) {
         res.sendStatus(204)
@@ -81,12 +80,12 @@ blogs.delete('/:id', authorizationMiddleware, (req: Request, res: Response) => {
 
 blogs.put('/:id', authorizationMiddleware, nameValidation, youtubeUrlValidation, checkResultErrorsMiddleware,
 
-    (req: Request, res: Response) => {
+    async (req: Request, res: Response) => {
 
         const id = req.params.id;
         const newName = req.body.name;
         const newUrl = req.body.youtubeUrl;
-        const isBlogUpdate = blogsRepositories.updateBlog(id, newName, newUrl);
+        const isBlogUpdate = await blogsRepositories.updateBlog(id, newName, newUrl);
 
         if (!isBlogUpdate) {
             return res.sendStatus(404)

@@ -4,6 +4,7 @@ import {testing} from "./router/testing";
 import {videos} from "./router/videos";
 import {blogs} from "./router/blogs";
 import {posts} from "./router/posts";
+import {runDb} from "./repositories/db";
 
 const app = express();
 
@@ -13,21 +14,21 @@ const parserMiddleware = bodyParser();
 app.use(parserMiddleware)
 
 
-//Testing
+//Routs
 app.use('/testing', testing);
-
-//Videos
-app.use('/videos', videos)
-
-//Blogs
-app.use('/blogs', blogs)
-
-//Posts
-app.use('/posts', posts)
-
+app.use('/videos', videos);
+app.use('/blogs', blogs);
+app.use('/posts', posts);
 
 
 //start app
-app.listen(port, () => {
-    console.log(`App listening at http://localhost:${port}`);
-});
+const startApp = async () => {
+    await runDb(); //запуск базы данных
+
+    app.listen(port, () => {
+        console.log(`App listening at http://localhost:${port}`);
+    });
+}
+startApp();
+
+

@@ -18,7 +18,8 @@ export async function runDb() {
         //Establish and verify connection
         await client.db("homeWorkDb").command({ping: 1});
         console.log("Connected successfully to the mongo server");
-    } catch {
+    } catch (e) {
+        console.log('db error', e)
         //Ensures that the client will close when you finish/error
         await client.close();
     }

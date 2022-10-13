@@ -7,7 +7,6 @@ console.log('mongoAtlas', mongoAtlas)
 const mongoUri = mongoAtlas || "mongodb://0.0.0.0:27017";
 
 const client = new MongoClient(mongoUri);
-
 const db = client.db("homeWorkDb")
 export const collectionBlogs = db.collection<Blog>('blogs');
 

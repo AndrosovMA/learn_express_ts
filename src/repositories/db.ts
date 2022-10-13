@@ -2,7 +2,7 @@ import {MongoClient} from "mongodb";
 import {Blog} from "./blogs-db-repositories";
 
 
-const mongoUri = process.env.mongoUri || "mongodb://0.0.0.0:27017" || "mongodb+srv://cluster0.kc7nkis.mongodb.net/myFirstDatabase";
+const mongoUri = process.env.mongoUri || "mongodb://0.0.0.0:27017";
 
 const client = new MongoClient(mongoUri);
 const db = client.db("homeWorkDb")

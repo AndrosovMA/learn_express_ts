@@ -1,8 +1,10 @@
 import {MongoClient} from "mongodb";
 import {Blog} from "./blogs-db-repositories";
 
+const mongoAtlas = process.env.mongoUri;
+console.log('mongoAtlas', mongoAtlas)
 
-const mongoUri = process.env.mongoUri || "mongodb://0.0.0.0:27017";
+const mongoUri = mongoAtlas || "mongodb://0.0.0.0:27017";
 
 const client = new MongoClient(mongoUri);
 const db = client.db("homeWorkDb")

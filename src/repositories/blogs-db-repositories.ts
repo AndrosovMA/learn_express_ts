@@ -14,7 +14,7 @@ export const blogsRepositories = {
         }
     },
 
-    async createBlog(name: string, youtubeUrl: string): Promise<Blog> {
+    async createBlog(name: string, youtubeUrl: string): Promise<Blog | null> {
         const nowDate = new Date();
 
         const newBlog = {
@@ -22,11 +22,12 @@ export const blogsRepositories = {
             "name": name,
             "youtubeUrl": youtubeUrl,
             "createdAt": nowDate.toISOString()
-        }
+        };
 
         await collectionBlogs.insertOne(newBlog)
 
-        return newBlog;
+        return await collectionBlogs.findOne({id: newBlog.id}, {projection: {"_id": 0}});
+
     },
 
     async updateBlog(id: string, newName: string, newUrl: string): Promise<boolean> {

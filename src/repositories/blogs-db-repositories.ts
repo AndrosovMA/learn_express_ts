@@ -3,12 +3,12 @@ import {collectionBlogs} from "./db";
 
 export const blogsRepositories = {
     async findBlogs(): Promise<Blog[]> {
-        return await collectionBlogs.find({}).toArray()
+        return await collectionBlogs.find({}, {projection: {"_id": 0}}).toArray()
     },
 
     async findBlog(id: string | null | undefined): Promise<Blog | null | undefined> {
         if (id) {
-            return await collectionBlogs.findOne({id: id});
+            return await collectionBlogs.findOne({id: id}, {projection: {"_id": 0}});
         } else {
             return undefined
         }
@@ -40,15 +40,14 @@ export const blogsRepositories = {
     },
 
     async deleteBlog(id: string): Promise<boolean> {
-       const blogDelete = await collectionBlogs.deleteOne({id: id})
+        const blogDelete = await collectionBlogs.deleteOne({id: id})
 
-       return blogDelete.deletedCount === 1;
+        return blogDelete.deletedCount === 1;
     }
 }
 
 //Types
 export type Blog = {
-    "_id"?: string,
     "id": string,
     "name": string,
     "youtubeUrl": string,

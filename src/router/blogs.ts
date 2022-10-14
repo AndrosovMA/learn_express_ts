@@ -38,9 +38,6 @@ const checkResultErrorsMiddleware = ((req: Request, res: Response, next: NextFun
 
 blogs.get('/', async (req: Request, res: Response) => {
     const foundBlogs = await blogsRepositories.findBlogs();
-    foundBlogs.map((el) => {
-        delete el['_id'];
-    })
 
     res.status(200).send(foundBlogs);
 });
@@ -51,7 +48,6 @@ blogs.get('/:id', async (req: Request, res: Response) => {
     let foundBlog = await blogsRepositories.findBlog(id);
 
     if (foundBlog) {
-        delete foundBlog._id;
         res.send(foundBlog);
 
     } else {

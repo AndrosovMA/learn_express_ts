@@ -15,12 +15,15 @@ const authorizationMiddleware = (req: Request, res: Response, next: NextFunction
         next();
     }
 };
-const isParamsId = ((req: Request, res: Response, next: NextFunction) => {
-    if (!req.params.id) {
+const isParamsIdTrue = (async (req: Request, res: Response, next: NextFunction) => {
+    const isIdTrue = await postsRepositories.findPost(req.params.id);
+
+    if (!isIdTrue) {
         return res.send(404);
     } else {
         next();
     }
+
 });
 const titleValidation = body('title').trim().notEmpty().isLength({max: 30}).withMessage("некорректно указано название");
 const shortDescriptionValidation = body('shortDescription').trim().notEmpty().isLength({max: 100}).withMessage("некорректно указано описание");
@@ -57,7 +60,7 @@ posts.get('/', async (req: Request, res: Response) => {
     res.status(200).send(foundPosts);
 });
 
-posts.get('/:id', isParamsId, async (req: Request, res: Response) => {
+posts.get('/:id', isParamsIdTrue, async (req: Request, res: Response) => {
     const id = req.params.id;
 
     const foundPost = await postsRepositories.findPost(id)
@@ -90,7 +93,7 @@ posts.post('/', authorizationMiddleware, titleValidation, shortDescriptionValida
     }
 );
 
-posts.delete('/:id', authorizationMiddleware, isParamsId, async (req: Request, res: Response) => {
+posts.delete('/:id', authorizationMiddleware, isParamsIdTrue, async (req: Request, res: Response) => {
 
     const id = req.params.id;
 
@@ -103,7 +106,7 @@ posts.delete('/:id', authorizationMiddleware, isParamsId, async (req: Request, r
     }
 });
 
-posts.put('/:id', authorizationMiddleware, isParamsId, titleValidation, shortDescriptionValidation,
+posts.put('/:id', authorizationMiddleware, isParamsIdTrue, titleValidation, shortDescriptionValidation,
     contentValidation, blogIdExistValidation, checkResultErrorsMiddleware,
 
     (req: Request, res: Response) => {

@@ -3,13 +3,13 @@ import {collectionBlogs, collectionPosts} from "./db";
 
 export const postsRepositories = {
     async findPosts(): Promise<Post[]> {
-        return await collectionPosts.find({}).toArray();
+        return await collectionPosts.find({}, {projection: {_id: 0}}).toArray();
     },
 
     async findPost(id: string | null | undefined): Promise<Post | null | undefined> {
 
         if (id) {
-            return await collectionPosts.findOne({id: id});
+            return await collectionPosts.findOne({id: id}, {projection: {_id: 0}});
         } else {
             return undefined;
         }
@@ -35,9 +35,9 @@ export const postsRepositories = {
                 "createdAt": nowDate.toISOString()
             }
 
-            await collectionPosts.insertOne(newPost)
+            await collectionPosts.insertOne(newPost);
 
-            return newPost;
+            return await collectionPosts.findOne({id: newPost.id}, {projection: {"_id": 0}});
         }
     },
 

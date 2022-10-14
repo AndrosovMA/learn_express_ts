@@ -1,6 +1,4 @@
-import {dataBlogs, dataPosts} from "../data";
 import {collectionBlogs, collectionPosts} from "./db";
-
 
 
 export const postsRepositories = {
@@ -44,30 +42,25 @@ export const postsRepositories = {
     },
 
     async updatePost(id: string, newtitle: string, newShortDescription: string, newContent: string, newBlogId: string) {
-        for (let i = 0; i < dataPosts.length; i++) {
-            if (dataPosts[i].id === id) {
-                dataPosts[i].title = newtitle;
-                dataPosts[i].shortDescription = newShortDescription;
-                dataPosts[i].content = newContent;
-                dataPosts[i].blogId = newBlogId;
-
-                return true;
+        const updatedPost = await collectionPosts.updateMany({id: id}, {
+            $set: {
+                title: newtitle, shortDescription: newShortDescription, content: newContent, blogId: newBlogId
             }
-        }
+        })
 
-        return false;
+        return updatedPost.matchedCount !== 0;
     },
 
     async deletePost(id: string) {
         const deletedPost = await collectionPosts.deleteOne({id: id});
-        return  deletedPost.deletedCount === 1;
+        return deletedPost.deletedCount === 1;
     },
 
     async checkBlogId(blogId: string) {
-        return dataBlogs.find(el => el.id === blogId)
+        const checkBlog = await collectionBlogs.findOne({id: blogId})
+        return !!checkBlog;
     }
 }
-
 
 export type Post = {
     "id": string,

@@ -18,6 +18,11 @@ export const blogsRepositories = {
             return (pageNumber - 1) * pageSize;
         }
 
+        const allBlogsByFilter = await collectionBlogs
+            .find({name: {$regex: searchNameTerm, $options: 'i'}}, {projection: {"_id": 0}})
+            .sort({sortBy: sortDirectionNumber(sortDirection)})
+            .toArray()
+
         const blogs = await collectionBlogs
             .find({name: {$regex: searchNameTerm, $options: 'i'}}, {projection: {"_id": 0}})
             .sort({sortBy: sortDirectionNumber(sortDirection)})
@@ -26,7 +31,7 @@ export const blogsRepositories = {
             .toArray()
 
         return {
-            "pagesCount": (Math.ceil(blogs.length / pageSize)),
+            "pagesCount": (Math.ceil(allBlogsByFilter.length / pageSize)),
             "page": pageNumber,
             "pageSize": pageSize,
             "totalCount": blogs.length,
@@ -91,7 +96,7 @@ export type Blog = {
 export type PagesBlogView = {
     "pagesCount": number,  // всего страниц
     "page": number,        // текущая страница
-    "pageSize": number,    // кол-во элементов на странице
-    "totalCount": number,  // всего элементов
+    "pageSize": number,    // кол-во элементов на странице (сколько вмещается на страницу)
+    "totalCount": number,  // всего элементов на странице
     "items": Blog[]
 }

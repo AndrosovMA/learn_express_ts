@@ -49,7 +49,7 @@ blogs.get('/:blogId/posts', async (req: Request, res: Response) => {
     let foundPosts = await postsRepositories.findPostsByBlogId(blogId, pageNumber, pageSize, sortBy, sortDirection);
 
     if (foundPosts) {
-        res.send(foundPosts);
+        res.status(200).send(foundPosts);
 
     } else {
         res.send(404);

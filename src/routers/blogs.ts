@@ -45,15 +45,23 @@ blogs.get('/:blogId/posts', async (req: Request, res: Response) => {
     const pageSize = req.query.pageSize ? +req.query.pageSize : 10;
     const sortBy = typeof req.query.sortBy === "string" ? req.query.sortBy : "createdAt";
     const sortDirection = typeof req.query.sortDirection === "string" ? req.query.sortDirection : "desc";
+    const isBlogId = await postsRepositories.checkBlogId(blogId);
 
-    let foundPosts = await postsRepositories.findPostsByBlogId(blogId, pageNumber, pageSize, sortBy, sortDirection);
-
-    if (foundPosts) {
-        res.status(200).send(foundPosts);
-
+    if (!isBlogId) {
+        res.send(404)
     } else {
-        res.send(404);
+
+        let foundPosts = await postsRepositories.findPostsByBlogId(blogId, pageNumber, pageSize, sortBy, sortDirection);
+
+        if (foundPosts) {
+            res.status(200).send(foundPosts);
+
+        } else {
+            res.send(404);
+        }
+
     }
+
 });
 
 blogs.post('/', authorizationMiddleware, nameValidation, youtubeUrlValidation, checkResultErrorsMiddleware,

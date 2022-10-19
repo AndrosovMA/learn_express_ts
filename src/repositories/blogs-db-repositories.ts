@@ -34,7 +34,7 @@ export const blogsRepositories = {
             "pagesCount": (Math.ceil(allBlogsByFilter.length / pageSize)),
             "page": pageNumber,
             "pageSize": pageSize,
-            "totalCount": blogs.length,
+            "totalCount": allBlogsByFilter.length,
             "items": blogs.map(blog => ({
                 "id": blog.id,
                 "name": blog.name,
@@ -97,6 +97,6 @@ export type PagesBlogView = {
     "pagesCount": number,  // всего страниц
     "page": number,        // текущая страница
     "pageSize": number,    // кол-во элементов на странице (сколько вмещается на страницу)
-    "totalCount": number,  // всего элементов на странице
+    "totalCount": number,  // всего элементов (блогов)
     "items": Blog[]
 }

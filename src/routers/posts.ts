@@ -1,57 +1,16 @@
-import {NextFunction, Request, Response} from 'express'
+import {Request, Response} from 'express'
 import {Router} from "express";
-import {body, validationResult} from "express-validator";
 import {postsRepositories} from "../repositories/posts-db-repositories";
+import {authorizationMiddleware} from "../middleware/authorization-middleware";
+import {
+    blogIdExistValidation,
+    checkResultErrorsMiddleware, contentValidation,
+    isParamsIdTrue,
+    shortDescriptionValidation,
+    titleValidation
+} from "../middleware/validation-middleware";
 
-export const posts = Router(); //вместо app теперь испльзуем router
-
-//Validation and Authorization
-const authorizationMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    const isAutorization = req.header('authorization') === 'Basic YWRtaW46cXdlcnR5';
-
-    if (!isAutorization) {
-        return res.send(401);
-    } else {
-        next();
-    }
-};
-const isParamsIdTrue = (async (req: Request, res: Response, next: NextFunction) => {
-    const isIdTrue = await postsRepositories.findPost(req.params.id);
-
-    if (!isIdTrue) {
-        return res.send(404);
-    } else {
-        next();
-    }
-
-});
-const titleValidation = body('title').trim().notEmpty().isLength({max: 30}).withMessage("некорректно указано название");
-const shortDescriptionValidation = body('shortDescription').trim().notEmpty().isLength({max: 100}).withMessage("некорректно указано описание");
-const contentValidation = body('content').trim().notEmpty().isLength({max: 1000}).withMessage("некорректно указан контент");
-const blogIdExistValidation = body('blogId').custom(async (value) => {
-    const blogId = await postsRepositories.checkBlogId(value)
-    if (!blogId) {
-        throw new Error('некорректно указан blogId')
-    }
-    return true
-});
-const checkResultErrorsMiddleware = ((req: Request, res: Response, next: NextFunction) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-        const allError = errors.array({onlyFirstError: true}).map(el => {
-            return {
-                "message": el.msg,
-                "field": el.param
-            }
-        })
-
-        return res.status(400).json({errorsMessages: allError});
-    }
-
-    next();
-});
-
+export const posts = Router();
 
 
 posts.get('/', async (req: Request, res: Response) => {

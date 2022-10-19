@@ -1,9 +1,9 @@
 import express from 'express'
 import bodyParser from "body-parser";
-import {testing} from "./router/testing";
-import {videos} from "./router/videos";
-import {blogs} from "./router/blogs";
-import {posts} from "./router/posts";
+import {testing} from "./routers/testing";
+import {videos} from "./routers/videos";
+import {blogs} from "./routers/blogs";
+import {posts} from "./routers/posts";
 import {runDb} from "./repositories/db";
 
 const app = express();

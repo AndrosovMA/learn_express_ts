@@ -2,9 +2,41 @@ import {collectionBlogs} from "./db";
 
 
 export const blogsRepositories = {
-    async findBlogs(): Promise<Blog[]> {
-        return await collectionBlogs.find({}, {projection: {"_id": 0}}).toArray()
-    },
+    async findBlogs(searchNameTerm: string, //решить вопрос с типизацией
+                    pageNumber: number,
+                    pageSize: number,
+                    sortBy: string,
+                    sortDirection: string): Promise<PagesBlogView> {
+
+        const sortDirectionNumber = (sortDirection: string) => {
+            if (sortDirection === "desc") return -1
+            else {
+                return 1
+            }
+        };
+        const skipNumber = (pageNumber: number, pageSize: number) => {
+            return (pageNumber - 1) * pageSize;
+        }
+
+        const blogs = await collectionBlogs
+            .find({name: {$regex: searchNameTerm, $options: 'i'}}, {projection: {"_id": 0}})
+            .sort({sortBy: sortDirectionNumber(sortDirection)})
+            .skip(skipNumber(pageNumber, pageSize))
+            .limit(pageSize)
+            .toArray()
+
+        return {
+            "pagesCount": (Math.ceil(blogs.length / pageSize)),
+            "page": pageNumber,
+            "pageSize": pageSize,
+            "totalCount": blogs.length,
+            "items": blogs.map(blog => ({
+                "id": blog.id,
+                "name": blog.name,
+                "youtubeUrl": blog.youtubeUrl,
+                "createdAt": blog.createdAt
+            }))
+        }},
 
     async findBlog(id: string | null | undefined): Promise<Blog | null | undefined> {
         if (id) {
@@ -47,10 +79,19 @@ export const blogsRepositories = {
     }
 }
 
+
 //Types
 export type Blog = {
     "id": string,
     "name": string,
     "youtubeUrl": string,
     "createdAt": string
+}
+
+export type PagesBlogView = {
+    "pagesCount": number,  // всего страниц
+    "page": number,        // текущая страница
+    "pageSize": number,    // кол-во элементов на странице
+    "totalCount": number,  // всего элементов
+    "items": Blog[]
 }

@@ -18,10 +18,9 @@ export const blogsRepositories = {
             return (pageNumber - 1) * pageSize;
         }
 
-        const allBlogsByFilter = await collectionBlogs
-            .find({name: {$regex: searchNameTerm, $options: 'i'}}, {projection: {"_id": 0}})
-            .sort({sortBy: sortDirectionNumber(sortDirection)})
-            .toArray()
+        const allBlogsCount = await collectionBlogs
+            .countDocuments({name: {$regex: searchNameTerm, $options: 'i'}})
+
 
         const blogs = await collectionBlogs
             .find({name: {$regex: searchNameTerm, $options: 'i'}}, {projection: {"_id": 0}})
@@ -31,15 +30,15 @@ export const blogsRepositories = {
             .toArray()
 
         return {
-            "pagesCount": (Math.ceil(allBlogsByFilter.length / pageSize)),
-            "page": pageNumber,
-            "pageSize": pageSize,
-            "totalCount": allBlogsByFilter.length,
-            "items": blogs.map(blog => ({
-                "id": blog.id,
-                "name": blog.name,
-                "youtubeUrl": blog.youtubeUrl,
-                "createdAt": blog.createdAt
+            pagesCount: (Math.ceil(allBlogsCount / pageSize)),
+            page: pageNumber,
+            pageSize: pageSize,
+            totalCount: allBlogsCount,
+            items: blogs.map(blog => ({
+                id: blog.id,
+                name: blog.name,
+                youtubeUrl: blog.youtubeUrl,
+                createdAt: blog.createdAt
             }))
         }},
 
@@ -87,16 +86,16 @@ export const blogsRepositories = {
 
 //Types
 export type Blog = {
-    "id": string,
-    "name": string,
-    "youtubeUrl": string,
-    "createdAt": string
+    id: string,
+    name: string,
+    youtubeUrl: string,
+    createdAt: string
 }
 
 export type PagesBlogView = {
-    "pagesCount": number,  // всего страниц
-    "page": number,        // текущая страница
-    "pageSize": number,    // кол-во элементов на странице (сколько вмещается на страницу)
-    "totalCount": number,  // всего элементов (блогов)
-    "items": Blog[]
+    pagesCount: number,    // всего страниц
+    page: number,        // текущая страница
+    pageSize: number,    // кол-во элементов на странице (сколько вмещается на страницу)
+    totalCount: number,  // всего элементов (блогов)
+    items: Blog[]
 }

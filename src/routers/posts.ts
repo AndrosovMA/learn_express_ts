@@ -14,7 +14,12 @@ export const posts = Router();
 
 
 posts.get('/', async (req: Request, res: Response) => {
-    const foundPosts = await postsRepositories.findPosts()
+    const pageNumber = req.query.pageNumber ? +req.query.pageNumber : 1;
+    const pageSize = req.query.pageSize ? +req.query.pageSize : 10;
+    const sortBy = typeof req.query.sortBy === "string" ? req.query.sortBy : "createdAt";
+    const sortDirection = typeof req.query.sortDirection === "string" ? req.query.sortDirection : "desc";
+
+    const foundPosts = await postsRepositories.findPosts(pageNumber, pageSize, sortBy, sortDirection)
 
     res.status(200).send(foundPosts);
 });

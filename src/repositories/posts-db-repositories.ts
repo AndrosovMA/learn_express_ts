@@ -2,9 +2,45 @@ import {collectionBlogs, collectionPosts} from "./db";
 
 
 export const postsRepositories = {
-    async findPosts(): Promise<Post[]> {
-        return await collectionPosts.find({}, {projection: {_id: 0}}).toArray();
-    },
+    async findPosts(pageNumber: number,
+                    pageSize: number,
+                    sortBy: string,
+                    sortDirection: string): Promise<PagesPostsView> {
+
+        const sortDirectionNumber = (sortDirection: string) => {
+            if (sortDirection === "desc") return -1
+            else {
+                return 1
+            }
+        };
+        const skipNumber = (pageNumber: number, pageSize: number) => {
+            return (pageNumber - 1) * pageSize;
+        }
+
+        const allPostsCount = await collectionPosts.countDocuments()
+
+        const posts = await collectionPosts
+            .find({}, {projection: {"_id": 0}})
+            .sort({sortBy: sortDirectionNumber(sortDirection)})
+            .skip(skipNumber(pageNumber, pageSize))
+            .limit(pageSize)
+            .toArray()
+
+        return {
+            pagesCount: (Math.ceil(allPostsCount / pageSize)),
+            page: pageNumber,
+            pageSize: pageSize,
+            totalCount: allPostsCount,
+            items: posts.map(post => ({
+                id: post.id,
+                title: post.title,
+                shortDescription: post.shortDescription,
+                content: post.content,
+                blogId: post.blogId,
+                blogName: post.blogName,
+                createdAt: post.createdAt
+            }))
+        }},
 
     async findPost(id: string | null | undefined): Promise<Post | null | undefined> {
 
@@ -65,7 +101,7 @@ export const postsRepositories = {
                             pageNumber: number,
                             pageSize: number,
                             sortBy: string,
-                            sortDirection: string): Promise<PostsByBlogView | null | undefined> {
+                            sortDirection: string): Promise<PagesPostsView | null | undefined> {
 
         const sortDirectionNumber = (sortDirection: string) => {
             if (sortDirection === "desc") return -1
@@ -110,19 +146,19 @@ export const postsRepositories = {
 
 //Types
 export type Post = {
-    "id": string,
-    "title": string,
-    "shortDescription": string,
-    "content": string,
-    "blogId": string,
-    "blogName": string,
-    "createdAt": string
+    id: string,
+    title: string,
+    shortDescription: string,
+    content: string,
+    blogId: string,
+    blogName: string,
+    createdAt: string
 }
 
-export type PostsByBlogView = {
-    "pagesCount": number,
-    "page": number,
-    "pageSize": number,
-    "totalCount": number,
-    "items": Post[]
+export type PagesPostsView = {
+    pagesCount: number,
+    page: number,
+    pageSize: number,
+    totalCount: number,
+    items: Post[]
 }

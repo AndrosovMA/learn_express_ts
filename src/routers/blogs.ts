@@ -124,3 +124,4 @@ blogs.put('/:id', authorizationMiddleware, nameValidation, youtubeUrlValidation,
 
 
 //   "/blogs?searchNameTerm=prob&pageNumber=1&pageSize=10&sortBy=createdAt&sortDirection=desc"
+

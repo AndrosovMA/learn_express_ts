@@ -21,11 +21,10 @@ export const blogsRepositories = {
 
         const allBlogsCount = await collectionBlogs.countDocuments({name: {$regex: searchNameTerm, $options: 'i'}})
 
-
         const blogs = await collectionBlogs
             .find({name: {$regex: searchNameTerm, $options: 'i'}}, {projection: {"_id": 0}})
-            .skip(skipNumber(pageNumber, pageSize))
             .limit(pageSize)
+            .skip(skipNumber(pageNumber, pageSize))
             .sort({sortBy: sortDirectionNumber(sortDirection)})
             .toArray()
 

@@ -141,6 +141,10 @@ export const postsRepositories = {
             return undefined;
         }
     },
+
+    async deleteAllData() {
+    await collectionPosts.deleteMany({})
+}
 }
 
 

@@ -80,6 +80,10 @@ export const blogsRepositories = {
         const blogDelete = await collectionBlogs.deleteOne({id: id})
 
         return blogDelete.deletedCount === 1;
+    },
+
+    async deleteAllData() {
+        await collectionBlogs.deleteMany({})
     }
 }
 

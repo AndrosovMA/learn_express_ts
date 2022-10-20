@@ -18,15 +18,14 @@ export const blogsRepositories = {
             return (pageNumber - 1) * pageSize;
         }
 
-        const allBlogsCount = await collectionBlogs
-            .countDocuments({name: {$regex: searchNameTerm, $options: 'i'}})
+        const allBlogsCount = await collectionBlogs.countDocuments({name: {$regex: searchNameTerm, $options: 'i'}})
 
 
         const blogs = await collectionBlogs
             .find({name: {$regex: searchNameTerm, $options: 'i'}}, {projection: {"_id": 0}})
-            .sort({sortBy: sortDirectionNumber(sortDirection)})
             .skip(skipNumber(pageNumber, pageSize))
             .limit(pageSize)
+            .sort({sortBy: sortDirectionNumber(sortDirection)})
             .toArray()
 
         return {

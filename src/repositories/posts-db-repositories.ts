@@ -19,7 +19,7 @@ export const postsRepositories = {
 
         const posts = await collectionPosts
             .find({}, {projection: {"_id": 0}})
-            .sort(sortBy, sortDirectionNumber(sortDirection))
+            .sort({[sortBy]:  sortDirectionNumber(sortDirection)})
             .limit(pageSize)
             .skip(skipNumber(pageNumber, pageSize))
             .toArray()
@@ -116,12 +116,12 @@ export const postsRepositories = {
         if (blogId) {
             const postsByBlog = await collectionPosts
                 .find({blogId: blogId}, {projection: {_id: 0}})
-                .sort(sortBy, sortDirectionNumber(sortDirection))
+                .sort({[sortBy]:  sortDirectionNumber(sortDirection)})
                 .limit(pageSize)
                 .skip(skipNumber(pageNumber, pageSize))
                 .toArray()
 
-                const allPostsCount = await collectionPosts.countDocuments({});
+                const allPostsCount = await collectionPosts.countDocuments({blogId: blogId});
 
             return {
                 pagesCount: (Math.ceil(allPostsCount / pageSize)),

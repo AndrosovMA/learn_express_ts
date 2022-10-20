@@ -23,7 +23,7 @@ export const blogsRepositories = {
 
         const blogs = await collectionBlogs
             .find({name: {$regex: searchNameTerm, $options: 'i'}}, {projection: {"_id": 0}})
-            .sort(sortBy,  sortDirectionNumber(sortDirection))
+            .sort({[sortBy]:  sortDirectionNumber(sortDirection)})
             .limit(pageSize)
             .skip(skipNumber(pageNumber, pageSize))
             .toArray()

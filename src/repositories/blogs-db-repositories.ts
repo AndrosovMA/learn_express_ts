@@ -1,4 +1,5 @@
 import {collectionBlogs} from "./db";
+import {v4} from "uuid";
 
 
 export const blogsRepositories = {
@@ -53,7 +54,7 @@ export const blogsRepositories = {
         const nowDate = new Date();
 
         const newBlog = {
-            "id": nowDate.toISOString(),
+            "id": v4(),
             "name": name,
             "youtubeUrl": youtubeUrl,
             "createdAt": nowDate.toISOString()

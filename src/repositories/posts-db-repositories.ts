@@ -1,5 +1,5 @@
 import {collectionBlogs, collectionPosts} from "./db";
-
+import {v4} from "uuid";
 
 export const postsRepositories = {
     async findPosts(pageNumber: number,
@@ -62,7 +62,7 @@ export const postsRepositories = {
             return false
         } else {
             const newPost: Post = {
-                "id": nowDate.toISOString(),
+                "id": v4(),
                 "title": title,
                 "shortDescription": shortDescription,
                 "content": content,

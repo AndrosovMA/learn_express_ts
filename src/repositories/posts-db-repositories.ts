@@ -112,28 +112,29 @@ export const postsRepositories = {
         const skipNumber = (pageNumber: number, pageSize: number) => {
             return (pageNumber - 1) * pageSize;
         };
+        const allPostsCount = await collectionPosts.countDocuments();
 
         if (blogId) {
             const postsByBlog = await collectionPosts
                 .find({blogId: blogId}, {projection: {_id: 0}})
-                .sort({sortBy: sortDirectionNumber(sortDirection)})
                 .skip(skipNumber(pageNumber, pageSize))
                 .limit(pageSize)
+                .sort({sortBy: sortDirectionNumber(sortDirection)})
                 .toArray()
 
             return {
-                "pagesCount": (Math.ceil(postsByBlog.length / pageSize)),
-                "page": pageNumber,
-                "pageSize": pageSize,
-                "totalCount": postsByBlog.length,
-                "items": postsByBlog.map((post) => ({
-                    "id": post.id,
-                    "title": post.title,
-                    "shortDescription": post.shortDescription,
-                    "content": post.content,
-                    "blogId": post.blogId,
-                    "blogName": post.blogName,
-                    "createdAt": post.createdAt
+                pagesCount: (Math.ceil(allPostsCount / pageSize)),
+                page: pageNumber,
+                pageSize: pageSize,
+                totalCount: allPostsCount,
+                items: postsByBlog.map((post) => ({
+                    id: post.id,
+                    title: post.title,
+                    shortDescription: post.shortDescription,
+                    content: post.content,
+                    blogId: post.blogId,
+                    blogName: post.blogName,
+                    createdAt: post.createdAt
                 }))
             }
 

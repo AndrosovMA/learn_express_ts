@@ -17,6 +17,7 @@ auth.post('/login', loginValidation, passwordValidation,
         if (isCheckCredentials) {
             return res.sendStatus(204)
         } else {
+            console.log("Send 401")
             return res.sendStatus(401)
         }
 

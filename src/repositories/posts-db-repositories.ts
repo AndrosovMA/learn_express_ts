@@ -2,6 +2,7 @@ import {collectionBlogs, collectionPosts} from "./db";
 import {v4} from "uuid";
 
 export const postsRepositories = {
+
     async findPosts(pageNumber: number,
                     pageSize: number,
                     sortBy: string,
@@ -19,7 +20,7 @@ export const postsRepositories = {
 
         const posts = await collectionPosts
             .find({}, {projection: {"_id": 0}})
-            .sort({[sortBy]:  sortDirectionNumber(sortDirection)})
+            .sort({[sortBy]: sortDirectionNumber(sortDirection)})
             .limit(pageSize)
             .skip(skipNumber(pageNumber, pageSize))
             .toArray()
@@ -40,7 +41,8 @@ export const postsRepositories = {
                 blogName: post.blogName,
                 createdAt: post.createdAt
             }))
-        }},
+        }
+    },
 
     async findPost(id: string | null | undefined): Promise<Post | null | undefined> {
 
@@ -97,7 +99,7 @@ export const postsRepositories = {
         return !!checkBlog;
     },
 
-    async findPostsByBlogId (blogId: string | null | undefined,
+    async findPostsByBlogId(blogId: string | null | undefined,
                             pageNumber: number,
                             pageSize: number,
                             sortBy: string,
@@ -116,12 +118,12 @@ export const postsRepositories = {
         if (blogId) {
             const postsByBlog = await collectionPosts
                 .find({blogId: blogId}, {projection: {_id: 0}})
-                .sort({[sortBy]:  sortDirectionNumber(sortDirection)})
+                .sort({[sortBy]: sortDirectionNumber(sortDirection)})
                 .limit(pageSize)
                 .skip(skipNumber(pageNumber, pageSize))
                 .toArray()
 
-                const allPostsCount = await collectionPosts.countDocuments({blogId: blogId});
+            const allPostsCount = await collectionPosts.countDocuments({blogId: blogId});
 
             return {
                 pagesCount: (Math.ceil(allPostsCount / pageSize)),
@@ -145,8 +147,8 @@ export const postsRepositories = {
     },
 
     async deleteAllData() {
-    await collectionPosts.deleteMany({})
-}
+        await collectionPosts.deleteMany({})
+    }
 }
 
 
@@ -160,6 +162,7 @@ export type Post = {
     blogName: string,
     createdAt: string
 }
+
 export type PagesPostsView = {
     pagesCount: number,
     page: number,

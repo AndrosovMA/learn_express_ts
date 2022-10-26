@@ -2,6 +2,7 @@ import {collectionUsers} from "./db";
 import {queryParamsType} from "../routers/users";
 
 export const usersRepositories = {
+
     async findUsers(queryParams: queryParamsType): Promise<UsersView> {
 
         const {searchLoginTerm,
@@ -84,6 +85,10 @@ export const usersRepositories = {
         const userDelete = await collectionUsers.deleteOne({id: id});
 
         return userDelete.deletedCount === 1;
+    },
+
+    async deleteAllData() {
+        await collectionUsers.deleteMany({})
     }
 }
 

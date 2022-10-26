@@ -19,16 +19,13 @@ export const usersRepositories = {
             }
         };
 
-
         const skipNumber = (pageNumber: number, pageSize: number) => {
             return (pageNumber - 1) * pageSize;
         };
 
         const allUsersCount = await collectionUsers.countDocuments({
-            name: {
-                $regex: queryParams.searchLoginTerm || queryParams.searchEmailTerm,
-                $options: 'i'
-            }
+            login: {$regex: searchLoginTerm, $options: 'i'},
+            email: {$regex: searchEmailTerm, $options: 'i'}
         });
 
         const users = await collectionUsers
@@ -38,7 +35,7 @@ export const usersRepositories = {
                 },
                 {projection: {"_id": 0}})
             .sort({[sortBy]: sortDirectionNumber(sortDirection)})
-            .limit(queryParams.pageSize)
+            .limit(pageSize)
             .skip(skipNumber(pageNumber, pageSize))
             .toArray()
 

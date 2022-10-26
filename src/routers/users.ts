@@ -42,8 +42,7 @@ users.post('/', authorizationMiddleware, loginValidation,
     }
 );
 
-users.delete('/:id', authorizationMiddleware,
-    async (req: Request, res: Response) => {
+users.delete('/:id', authorizationMiddleware, async (req: Request, res: Response) => {
 
     const id = req.params.id
 

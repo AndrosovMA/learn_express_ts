@@ -7,7 +7,7 @@ import {postsRepositories} from "../repositories/posts-db-repositories";
 export const nameValidation = body('name').trim().notEmpty().isLength({max: 15}).withMessage("некорректно указано имя");
 export const youtubeUrlValidation = body('youtubeUrl').notEmpty().isLength({max: 100}).isURL().withMessage("некорректно указан url");
 
-// validation post
+// validation posts
 export const isParamsIdTrue = (async (req: Request, res: Response, next: NextFunction) => {
     const isIdTrue = await postsRepositories.findPost(req.params.id);
 
@@ -29,8 +29,13 @@ export const blogIdExistValidation = body('blogId').custom(async (value) => {
     return true
 });
 
+// validation users
+export const loginValidation = body('login').trim().notEmpty().isLength({max: 10, min: 3}).withMessage("некорректно указан login");
+export const passwordValidation = body('password').trim().notEmpty().isLength({max: 20, min: 6}).withMessage("некорректно указан password");
+export const emailValidation = body('email').trim().notEmpty().matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/).withMessage("некорректно указан email");
 
 
+// result
 export const checkResultErrorsMiddleware = ((req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
 

@@ -21,6 +21,7 @@ export const blogsRepositories = {
 
         const allBlogsCount = await collectionBlogs.countDocuments({name: {$regex: searchNameTerm, $options: 'i'}})
 
+
         const blogs = await collectionBlogs
             .find({name: {$regex: searchNameTerm, $options: 'i'}}, {projection: {"_id": 0}})
             .sort({[sortBy]:  sortDirectionNumber(sortDirection)})

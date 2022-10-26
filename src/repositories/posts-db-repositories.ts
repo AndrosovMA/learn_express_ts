@@ -160,7 +160,6 @@ export type Post = {
     blogName: string,
     createdAt: string
 }
-
 export type PagesPostsView = {
     pagesCount: number,
     page: number,

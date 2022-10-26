@@ -1,6 +1,7 @@
 import {MongoClient} from "mongodb";
 import {Blog} from "./blogs-db-repositories";
-import {Post} from "./posts-in-memory-repositories";
+import {Post} from "./posts-db-repositories";
+import {UserDbType, UserView} from "./users-db-repositories";
 
 
 const mongoAtlas = process.env.mongoUri;
@@ -12,6 +13,7 @@ const db = client.db("homeWorkDb")
 
 export const collectionBlogs = db.collection<Blog>('blogs');
 export const collectionPosts = db.collection<Post>('posts');
+export const collectionUsers = db.collection<UserDbType>('users');
 
 
 export async function runDb() {

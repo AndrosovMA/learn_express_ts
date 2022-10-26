@@ -5,6 +5,8 @@ import {videos} from "./routers/videos";
 import {blogs} from "./routers/blogs";
 import {posts} from "./routers/posts";
 import {runDb} from "./repositories/db";
+import {users} from "./routers/users";
+import {auth} from "./routers/auth";
 
 const app = express();
 
@@ -19,6 +21,8 @@ app.use('/testing', testing);
 app.use('/videos', videos);
 app.use('/blogs', blogs);
 app.use('/posts', posts);
+app.use('/users', users)
+app.use('/auth', auth)
 
 
 //start app

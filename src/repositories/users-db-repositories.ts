@@ -32,7 +32,6 @@ export const usersRepositories = {
             ]
         }
 
-
         const allUsersCount = await collectionUsers.countDocuments(usersFilter);
 
         const users = await collectionUsers
@@ -63,10 +62,8 @@ export const usersRepositories = {
             {projection: {_id: 0, passwordHash: 0}});
     },
 
-    async findHashUserByLogin(login: string, password: string): Promise<string | null> {
-        const isFindedUser = await collectionUsers.findOne({login: login},
-            {projection: {_id: 0} }
-        );
+    async findHashUserByLogin(login: string): Promise<string | null> {
+        const isFindedUser = await collectionUsers.findOne({login: login} );
 
         if (isFindedUser) {
             return isFindedUser.passwordHash

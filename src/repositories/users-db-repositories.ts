@@ -1,5 +1,6 @@
 import {collectionUsers} from "./db";
 import {queryParamsType} from "../routers/users";
+import {Filter} from "mongodb";
 
 export const usersRepositories = {
 
@@ -24,17 +25,18 @@ export const usersRepositories = {
             return (pageNumber - 1) * pageSize;
         };
 
-        const allUsersCount = await collectionUsers.countDocuments({
-            login: {$regex: searchLoginTerm, $options: 'i'},
-            email: {$regex: searchEmailTerm, $options: 'i'}
-        });
+        const usersFilter: Filter<UserDbType> = {
+            $or: [
+                { login: {$regex: searchLoginTerm, $options: 'i'}},
+                { email: {$regex: searchEmailTerm, $options: 'i'}}
+            ]
+        }
+
+
+        const allUsersCount = await collectionUsers.countDocuments(usersFilter);
 
         const users = await collectionUsers
-            .find({
-                    login: {$regex: searchLoginTerm, $options: 'i'},
-                    email: {$regex: searchEmailTerm, $options: 'i'}
-                },
-                {projection: {"_id": 0}})
+            .find(usersFilter, {projection: {"_id": 0}})
             .sort({[sortBy]: sortDirectionNumber(sortDirection)})
             .limit(pageSize)
             .skip(skipNumber(pageNumber, pageSize))
